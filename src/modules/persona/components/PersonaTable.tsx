@@ -1,6 +1,6 @@
 import React from 'react';
 import { PersonaDTO } from '../dto/persona.dto';
-import { Edit2, Trash2, User, Mail, Phone } from 'lucide-react';
+import { Edit2, Trash2, User, Mail, Phone, MapPin, Calendar } from 'lucide-react';
 
 interface PersonaTableProps {
   personas: PersonaDTO[];
@@ -38,32 +38,37 @@ export const PersonaTable: React.FC<PersonaTableProps> = ({
         <tbody className="divide-y divide-zinc-100">
           {personas.map((persona) => {
             const principalContact = persona.contactos.find(c => c.esPrincipal) || persona.contactos[0];
-            
             return (
               <tr key={persona.id} className="hover:bg-zinc-50/50 transition-colors group">
                 <td className="p-4">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-indigo-50 flex items-center justify-center text-indigo-600">
+                    <div className="w-10 h-10 rounded-full bg-emerald-50 flex items-center justify-center text-emerald-600">
                       <User size={20} />
                     </div>
                     <div>
                       <div className="font-medium text-zinc-900">{persona.nombres} {persona.apellidos}</div>
-                      <div className="text-xs text-zinc-500">{persona.fechaNacimiento}</div>
+                      <div className="text-xs text-zinc-500 flex items-center gap-1">
+                        <Calendar size={12} /> {persona.fechaNacimiento}
+                      </div>
                     </div>
                   </div>
                 </td>
-                <td className="p-4 text-sm text-zinc-600">
-                  {persona.numeroIdentificacion}
+                <td className="p-4">
+                  <div className="text-sm font-medium text-zinc-700">{persona.numeroIdentificacion}</div>
+                  <div className="text-xs text-zinc-500">Tipo ID: {persona.tipoIdentificacionId}</div>
                 </td>
                 <td className="p-4">
                   {principalContact ? (
-                    <div className="flex items-center gap-2 text-sm text-zinc-600">
+                    <div className="text-sm text-zinc-600 flex items-center gap-2">
                       {principalContact.tipoContactoId === 1 ? <Mail size={14} /> : <Phone size={14} />}
                       {principalContact.valor}
                     </div>
                   ) : (
                     <span className="text-xs text-zinc-400 italic">Sin contacto</span>
                   )}
+                  <div className="text-xs text-zinc-400 flex items-center gap-1 mt-1">
+                    <MapPin size={12} /> {persona.direcciones.length} direcciones
+                  </div>
                 </td>
                 <td className="p-4">
                   <span className={`px-2 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${

@@ -10,8 +10,8 @@ export const contactoSchema = z.object({
   tipoContactoId: z.number(),
   ambitoContactoId: z.number(),
   valor: z.string().min(1, 'El valor de contacto es requerido'),
-  esPrincipal: z.boolean().default(false),
-  activo: z.boolean().default(true),
+  esPrincipal: z.boolean(),
+  activo: z.boolean(),
 });
 
 export const direccionSchema = z.object({
@@ -34,9 +34,9 @@ export const personaSchema = z.object({
   nacionalidadId: z.number(),
   generoId: z.number(),
   estadoCivilId: z.number(),
-  activo: z.boolean().default(true),
-  contactos: z.array(contactoSchema).default([]),
-  direcciones: z.array(direccionSchema).default([]),
+  activo: z.boolean(),
+  contactos: z.array(contactoSchema),
+  direcciones: z.array(direccionSchema),
 });
 
 export type ContactoDTO = z.infer<typeof contactoSchema>;

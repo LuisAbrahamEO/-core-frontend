@@ -10,7 +10,7 @@ export const contactoEmpresaSchema = z.object({
   tipoContactoId: z.number(),
   valor: z.string().min(1, 'Valor de contacto requerido'),
   descripcion: z.string().optional(),
-  esPrincipal: z.boolean().default(false),
+  esPrincipal: z.boolean(),
 });
 
 export const ubicacionEmpresaSchema = z.object({
@@ -31,11 +31,11 @@ export const empresaSchema = z.object({
   giroActividadId: z.number(),
   tipoSociedadId: z.number(),
   sectorEconomicoId: z.number(),
-  activo: z.boolean().default(true),
+  activo: z.boolean(),
   
-  contactos: z.array(contactoEmpresaSchema).default([]),
-  ubicaciones: z.array(ubicacionEmpresaSchema).default([]),
-  rolesIds: z.array(z.number()).default([]),
+  contactos: z.array(contactoEmpresaSchema),
+  ubicaciones: z.array(ubicacionEmpresaSchema),
+  rolesIds: z.array(z.number()),
 });
 
 export type ContactoEmpresaDTO = z.infer<typeof contactoEmpresaSchema>;

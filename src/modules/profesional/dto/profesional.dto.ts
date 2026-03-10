@@ -20,7 +20,7 @@ export const profesionalSchema = z.object({
   previsionSaludId: z.number(),
   afpId: z.number(),
   cajaCompensacionId: z.number(),
-  activo: z.boolean().default(true),
+  activo: z.boolean(),
   
   // Descriptores legibles (solo lectura para UI)
   estadoDescripcion: z.string().optional(),
