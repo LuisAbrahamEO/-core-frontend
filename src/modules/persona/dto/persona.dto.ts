@@ -6,37 +6,37 @@ import { z } from 'zod';
  */
 
 export const personaSchema = z.object({
-    id: z.number().optional(),
-    tipoIdentificacionId: z.number(),
-    numeroIdentificacion: z.string()
+    persona_id: z.number().optional(),
+    tipo_identificacion_id: z.number(),
+    numero_identificacion: z.string()
         .min(1, 'Número de identificación es requerido')
         .max(50, 'Máximo 50 caracteres'),
-    nombresPersona: z.string()
+    nombres_persona: z.string()
         .min(1, 'Nombres son requeridos')
         .max(255, 'Máximo 255 caracteres'),
-    primerApellido: z.string()
+    primer_apellido: z.string()
         .min(1, 'Primer apellido es requerido')
         .max(255, 'Máximo 255 caracteres'),
-    segundoApellido: z.string()
+    segundo_apellido: z.string()
         .max(255, 'Máximo 255 caracteres')
         .optional()
         .nullable(),
-    fechaNacimiento: z.string()
+    fecha_nacimiento: z.string()
         .optional()
         .nullable(),
-    nacionalidadId: z.number()
+    nacionalidad_id: z.number()
         .optional()
         .nullable(),
-    generoId: z.number()
+    genero_id: z.number()
         .optional()
         .nullable(),
-    estadoCivilId: z.number()
+    estado_civil_id: z.number()
         .optional()
         .nullable(),
-    paisOrigenId: z.number()
+    pais_origen_id: z.number()
         .optional()
         .nullable(),
-    paisResidenciaId: z.number()
+    pais_residencia_id: z.number()
         .optional()
         .nullable(),
     active: z.boolean(),
@@ -46,7 +46,7 @@ export const personaSchema = z.object({
     telefono: z.string().max(20, 'Máximo 20 caracteres').optional().nullable(),
     calle: z.string().max(255).optional().nullable(),
     numero: z.string().max(50).optional().nullable(),
-    localidadId: z.number().optional().nullable(),
+    localidad_id: z.number().optional().nullable(),
 });
 
 export type PersonaDTO = z.infer<typeof personaSchema>;

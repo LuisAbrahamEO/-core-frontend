@@ -80,42 +80,42 @@ const MOCK_EMPRESAS: EmpresaDTO[] = [
 
 const MOCK_PERSONAS: PersonaDTO[] = [
   {
-    id: 1,
-    tipoIdentificacionId: 1,
-    numeroIdentificacion: "18.456.789-0",
-    nombresPersona: "Juan Pablo",
-    primerApellido: "Soto",
-    segundoApellido: "Mayor",
-    fechaNacimiento: "1990-05-15",
-    nacionalidadId: 1,
-    generoId: 1,
-    estadoCivilId: 2,
+    persona_id: 1,
+    tipo_identificacion_id: 1,
+    numero_identificacion: "18.456.789-0",
+    nombres_persona: "Juan Pablo",
+    primer_apellido: "Soto",
+    segundo_apellido: "Mayor",
+    fecha_nacimiento: "1990-05-15",
+    nacionalidad_id: 1,
+    genero_id: 1,
+    estado_civil_id: 2,
     active: true,
   },
   {
-    id: 2,
-    tipoIdentificacionId: 1,
-    numeroIdentificacion: "15.222.333-4",
-    nombresPersona: "María Ignacia",
-    primerApellido: "López",
-    segundoApellido: "Jara",
-    fechaNacimiento: "1985-11-20",
-    nacionalidadId: 1,
-    generoId: 2,
-    estadoCivilId: 1,
+    persona_id: 2,
+    tipo_identificacion_id: 1,
+    numero_identificacion: "15.222.333-4",
+    nombres_persona: "María Ignacia",
+    primer_apellido: "López",
+    segundo_apellido: "Jara",
+    fecha_nacimiento: "1985-11-20",
+    nacionalidad_id: 1,
+    genero_id: 2,
+    estado_civil_id: 1,
     active: true,
   },
   {
-    id: 3,
-    tipoIdentificacionId: 1,
-    numeroIdentificacion: "20.111.222-3",
-    nombresPersona: "Carlos Andrés",
-    primerApellido: "Vicuña",
-    segundoApellido: "Mackenna",
-    fechaNacimiento: "1995-02-10",
-    nacionalidadId: 1,
-    generoId: 1,
-    estadoCivilId: 1,
+    persona_id: 3,
+    tipo_identificacion_id: 1,
+    numero_identificacion: "20.111.222-3",
+    nombres_persona: "Carlos Andrés",
+    primer_apellido: "Vicuña",
+    segundo_apellido: "Mackenna",
+    fecha_nacimiento: "1995-02-10",
+    nacionalidad_id: 1,
+    genero_id: 1,
+    estado_civil_id: 1,
     active: false,
   }
 ];
@@ -212,7 +212,7 @@ export default function App() {
       if (activeTab === 'personas') {
         // 1. Crear Persona
         const persona = await personaService.create(data);
-        const personaId = persona.id!;
+        const personaId = persona.persona_id!;
 
         // 2. Guardar Contacto si existe
         if (data.email || data.telefono) {
@@ -233,7 +233,7 @@ export default function App() {
             tipo_direccion_id: 1,
             calle: data.calle,
             numero: data.numero,
-            localidad_id: data.localidadId || 1
+            localidad_id: data.localidad_id || 1
           });
         }
       } else {
@@ -265,8 +265,8 @@ export default function App() {
         {/* Sidebar ACL Style */}
         <aside className="w-64 bg-gradient-to-b from-[#E31D4A] to-[#5135A1] text-white flex flex-col shadow-xl fixed h-full z-20">
           <div className="p-8 flex flex-col items-center border-b border-white/10">
-            <div className="bg-white p-2 rounded-xl mb-4 shadow-lg">
-              <img src="https://www.acl.cl/wp-content/uploads/2021/05/logo_acl_color.png" alt="ACL Logo" className="h-8" referrerPolicy="no-referrer" />
+            <div className="bg-white p-4 rounded-xl mb-4 shadow-lg flex items-center justify-center">
+              <img src="https://www.acl.cl/wp-content/uploads/2024/01/logo-acl-dataart.png" alt="ACL Logo" className="h-10 object-contain" referrerPolicy="no-referrer" />
             </div>
             <div className="text-center">
               <h2 className="text-lg font-bold tracking-tight">Gestión CORE</h2>

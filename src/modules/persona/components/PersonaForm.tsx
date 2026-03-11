@@ -37,6 +37,7 @@ export const PersonaForm: React.FC<PersonaFormProps> = ({
     const [nacionalidades, setNacionalidades] = useState<CatalogoDTO[]>([]);
     const [estadosCiviles, setEstadosCiviles] = useState<CatalogoDTO[]>([]);
     const [paises, setPaises] = useState<CatalogoDTO[]>([]);
+    const [localidades, setLocalidades] = useState<CatalogoDTO[]>([]);
     const [error, setError] = useState<string | null>(null);
 
     const {
@@ -56,12 +57,13 @@ export const PersonaForm: React.FC<PersonaFormProps> = ({
     useEffect(() => {
         const loadCatalogs = async () => {
             try {
-                const [tipos, gens, nacs, civils, ps] = await Promise.allSettled([
+                const [tipos, gens, nacs, civils, ps, locs] = await Promise.allSettled([
                     personaService.getTiposIdentificacion(),
                     personaService.getGeneros(),
                     personaService.getNacionalidades(),
                     personaService.getEstadosCiviles(),
-                    personaService.getPaises()
+                    personaService.getPaises(),
+                    personaService.getLocalidades()
                 ]);
 
                 if (tipos.status === 'fulfilled' && Array.isArray(tipos.value)) setTiposIdentificacion(tipos.value);
@@ -69,6 +71,7 @@ export const PersonaForm: React.FC<PersonaFormProps> = ({
                 if (nacs.status === 'fulfilled' && Array.isArray(nacs.value)) setNacionalidades(nacs.value);
                 if (civils.status === 'fulfilled' && Array.isArray(civils.value)) setEstadosCiviles(civils.value);
                 if (ps.status === 'fulfilled' && Array.isArray(ps.value)) setPaises(ps.value);
+                if (locs.status === 'fulfilled' && Array.isArray(locs.value)) setLocalidades(locs.value);
                 
             } catch (error) {
                 console.error('Error cargando catálogos:', error);
@@ -76,6 +79,18 @@ export const PersonaForm: React.FC<PersonaFormProps> = ({
         };
         loadCatalogs();
     }, []);
+
+    const handleActualSubmit = async (data: PersonaDTO) => {
+        setError(null);
+        try {
+            // El envío real se delega al padre (App.tsx) pero capturamos errores aquí si fuera necesario
+            // O podemos implementar la lógica completa aquí para cumplir con "manejo de errores en el componente"
+            await onSubmit(data);
+        } catch (err: any) {
+            const msg = err.response?.data?.message || 'Error de conexión con el servidor central.';
+            setError(msg);
+        }
+    };
 
     return (
         <div className="relative">
@@ -87,13 +102,18 @@ export const PersonaForm: React.FC<PersonaFormProps> = ({
             )}
 
             <form 
-                onSubmit={handleSubmit(onSubmit)} 
+                onSubmit={handleSubmit(handleActualSubmit)} 
                 className="space-y-10 bg-[#F9FAFB] p-10 rounded-[2rem] shadow-lg border border-[#E5E7EB]"
             >
                 {error && (
-                    <div className="bg-red-50 border-l-4 border-[#E31D4A] p-4 flex items-center gap-3">
-                        <AlertCircle className="text-[#E31D4A]" size={20} />
-                        <p className="text-sm font-bold text-[#E31D4A] uppercase tracking-tight">{error}</p>
+                    <div className="col-span-full bg-[#FFF1F2] border-l-[6px] border-[#E31D4A] p-6 rounded-2xl flex items-center gap-4 animate-in slide-in-from-top duration-300">
+                        <div className="bg-[#E31D4A] p-2 rounded-full text-white">
+                            <AlertCircle size={24} />
+                        </div>
+                        <div>
+                            <h4 className="text-sm font-black text-[#E31D4A] uppercase tracking-widest">Error de Validación Core</h4>
+                            <p className="text-xs font-bold text-[#1A1A1A] mt-1">{error}</p>
+                        </div>
                     </div>
                 )}
 
@@ -110,7 +130,7 @@ export const PersonaForm: React.FC<PersonaFormProps> = ({
                         Tipo Identificación <span className="text-[#E31D4A]">*</span>
                     </label>
                     <select
-                        {...register('tipoIdentificacionId', { valueAsNumber: true })}
+                        {...register('tipo_identificacion_id', { valueAsNumber: true })}
                         className="w-full px-5 py-3 rounded-2xl border border-[#E5E7EB] bg-white focus:ring-2 focus:ring-[#E31D4A] outline-none transition-all font-medium text-sm shadow-sm"
                     >
                         <option value="">Seleccione tipo...</option>
@@ -118,9 +138,9 @@ export const PersonaForm: React.FC<PersonaFormProps> = ({
                             <option key={t.id} value={t.id}>{t.descripcion || t.codigo}</option>
                         ))}
                     </select>
-                    {errors.tipoIdentificacionId && (
+                    {errors.tipo_identificacion_id && (
                         <p className="text-[10px] font-bold text-[#E31D4A] uppercase mt-1 flex items-center gap-1">
-                            <AlertCircle size={12} /> {errors.tipoIdentificacionId.message}
+                            <AlertCircle size={12} /> {errors.tipo_identificacion_id.message}
                         </p>
                     )}
                 </div>
@@ -133,14 +153,14 @@ export const PersonaForm: React.FC<PersonaFormProps> = ({
                     <div className="relative">
                         <Fingerprint size={18} className="absolute left-5 top-1/2 -translate-y-1/2 text-[#5135A1]" />
                         <input
-                            {...register('numeroIdentificacion')}
+                            {...register('numero_identificacion')}
                             className="w-full pl-12 pr-5 py-3 rounded-2xl border border-[#E5E7EB] bg-white focus:ring-2 focus:ring-[#E31D4A] outline-none transition-all font-medium text-sm shadow-sm"
                             placeholder="Ej: 12345678-9"
                         />
                     </div>
-                    {errors.numeroIdentificacion && (
+                    {errors.numero_identificacion && (
                         <p className="text-[10px] font-bold text-[#E31D4A] uppercase mt-1 flex items-center gap-1">
-                            <AlertCircle size={12} /> {errors.numeroIdentificacion.message}
+                            <AlertCircle size={12} /> {errors.numero_identificacion.message}
                         </p>
                     )}
                 </div>
@@ -151,13 +171,13 @@ export const PersonaForm: React.FC<PersonaFormProps> = ({
                         Nombres <span className="text-[#E31D4A]">*</span>
                     </label>
                     <input
-                        {...register('nombresPersona')}
+                        {...register('nombres_persona')}
                         className="w-full px-5 py-3 rounded-2xl border border-[#E5E7EB] bg-white focus:ring-2 focus:ring-[#E31D4A] outline-none transition-all font-medium text-sm shadow-sm"
                         placeholder="Nombres completos"
                     />
-                    {errors.nombresPersona && (
+                    {errors.nombres_persona && (
                         <p className="text-[10px] font-bold text-[#E31D4A] uppercase mt-1 flex items-center gap-1">
-                            <AlertCircle size={12} /> {errors.nombresPersona.message}
+                            <AlertCircle size={12} /> {errors.nombres_persona.message}
                         </p>
                     )}
                 </div>
@@ -168,13 +188,13 @@ export const PersonaForm: React.FC<PersonaFormProps> = ({
                         Primer Apellido <span className="text-[#E31D4A]">*</span>
                     </label>
                     <input
-                        {...register('primerApellido')}
+                        {...register('primer_apellido')}
                         className="w-full px-5 py-3 rounded-2xl border border-[#E5E7EB] bg-white focus:ring-2 focus:ring-[#E31D4A] outline-none transition-all font-medium text-sm shadow-sm"
                         placeholder="Apellido paterno"
                     />
-                    {errors.primerApellido && (
+                    {errors.primer_apellido && (
                         <p className="text-[10px] font-bold text-[#E31D4A] uppercase mt-1 flex items-center gap-1">
-                            <AlertCircle size={12} /> {errors.primerApellido.message}
+                            <AlertCircle size={12} /> {errors.primer_apellido.message}
                         </p>
                     )}
                 </div>
@@ -183,7 +203,7 @@ export const PersonaForm: React.FC<PersonaFormProps> = ({
                 <div className="space-y-2">
                     <label className="text-xs font-bold text-[#111827] uppercase tracking-widest">Segundo Apellido</label>
                     <input
-                        {...register('segundoApellido')}
+                        {...register('segundo_apellido')}
                         className="w-full px-5 py-3 rounded-2xl border border-[#E5E7EB] bg-white focus:ring-2 focus:ring-[#E31D4A] outline-none transition-all font-medium text-sm shadow-sm"
                         placeholder="Apellido materno"
                     />
@@ -196,7 +216,7 @@ export const PersonaForm: React.FC<PersonaFormProps> = ({
                         <Calendar size={18} className="absolute left-5 top-1/2 -translate-y-1/2 text-[#5135A1]" />
                         <input
                             type="date"
-                            {...register('fechaNacimiento')}
+                            {...register('fecha_nacimiento')}
                             className="w-full pl-12 pr-5 py-3 rounded-2xl border border-[#E5E7EB] bg-white focus:ring-2 focus:ring-[#E31D4A] outline-none transition-all font-medium text-sm shadow-sm"
                         />
                     </div>
@@ -214,7 +234,7 @@ export const PersonaForm: React.FC<PersonaFormProps> = ({
                         Género
                     </label>
                     <select
-                        {...register('generoId', { valueAsNumber: true })}
+                        {...register('genero_id', { valueAsNumber: true })}
                         className="w-full px-5 py-3 rounded-2xl border border-[#E5E7EB] bg-white focus:ring-2 focus:ring-[#E31D4A] outline-none transition-all font-medium text-sm shadow-sm"
                     >
                         <option value="">Seleccione género...</option>
@@ -230,7 +250,7 @@ export const PersonaForm: React.FC<PersonaFormProps> = ({
                         <Heart size={14} className="text-[#E31D4A]" /> Estado Civil
                     </label>
                     <select
-                        {...register('estadoCivilId', { valueAsNumber: true })}
+                        {...register('estado_civil_id', { valueAsNumber: true })}
                         className="w-full px-5 py-3 rounded-2xl border border-[#E5E7EB] bg-white focus:ring-2 focus:ring-[#E31D4A] outline-none transition-all font-medium text-sm shadow-sm"
                     >
                         <option value="">Seleccione estado...</option>
@@ -246,7 +266,7 @@ export const PersonaForm: React.FC<PersonaFormProps> = ({
                         <Globe size={14} className="text-[#5135A1]" /> Nacionalidad
                     </label>
                     <select
-                        {...register('nacionalidadId', { valueAsNumber: true })}
+                        {...register('nacionalidad_id', { valueAsNumber: true })}
                         className="w-full px-5 py-3 rounded-2xl border border-[#E5E7EB] bg-white focus:ring-2 focus:ring-[#E31D4A] outline-none transition-all font-medium text-sm shadow-sm"
                     >
                         <option value="">Seleccione nacionalidad...</option>
@@ -262,7 +282,7 @@ export const PersonaForm: React.FC<PersonaFormProps> = ({
                         <MapPin size={14} className="text-[#5135A1]" /> País de Residencia
                     </label>
                     <select
-                        {...register('paisResidenciaId', { valueAsNumber: true })}
+                        {...register('pais_residencia_id', { valueAsNumber: true })}
                         className="w-full px-5 py-3 rounded-2xl border border-[#E5E7EB] bg-white focus:ring-2 focus:ring-[#E31D4A] outline-none transition-all font-medium text-sm shadow-sm"
                     >
                         <option value="">Seleccione país...</option>
@@ -338,6 +358,22 @@ export const PersonaForm: React.FC<PersonaFormProps> = ({
                         placeholder="Ej: 1234, Of 501"
                     />
                 </div>
+
+                <div className="space-y-2">
+                    <label className="text-xs font-bold text-[#111827] uppercase tracking-widest flex items-center gap-2">
+                        Localidad / Comuna
+                    </label>
+                    <select
+                        {...register('localidad_id', { valueAsNumber: true })}
+                        className="w-full px-5 py-3 rounded-2xl border border-[#E5E7EB] bg-white focus:ring-2 focus:ring-[#E31D4A] outline-none transition-all font-medium text-sm shadow-sm"
+                    >
+                        <option value="">Seleccione localidad...</option>
+                        {localidades?.map(l => (
+                            <option key={l.id} value={l.id}>{l.nombre || l.descripcion}</option>
+                        ))}
+                    </select>
+                </div>
+
             </div>
 
             {/* Acciones del Formulario */}

@@ -36,29 +36,29 @@ export const PersonaTable: React.FC<PersonaTableProps> = ({
           </tr>
         </thead>
         <tbody className="divide-y divide-zinc-100">
-              {personas.map((persona) => {
+          {personas.map((persona) => {
             return (
-              <tr key={persona.id} className="hover:bg-zinc-50/50 transition-colors group">
+              <tr key={persona.persona_id} className="hover:bg-zinc-50/50 transition-colors group">
                 <td className="p-4">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-full bg-emerald-50 flex items-center justify-center text-emerald-600">
                       <User size={20} />
                     </div>
                     <div>
-                      <div className="font-medium text-zinc-900">{persona.nombresPersona} {persona.primerApellido}</div>
+                      <div className="font-medium text-zinc-900">{persona.nombres_persona} {persona.primer_apellido}</div>
                       <div className="text-xs text-zinc-500 flex items-center gap-1">
-                        <Calendar size={12} /> {persona.fechaNacimiento || 'N/A'}
+                        <Calendar size={12} /> {persona.fecha_nacimiento || 'N/A'}
                       </div>
                     </div>
                   </div>
                 </td>
                 <td className="p-4">
-                  <div className="text-sm font-medium text-zinc-700">{persona.numeroIdentificacion}</div>
-                  <div className="text-xs text-zinc-500">Tipo ID: {persona.tipoIdentificacionId}</div>
+                  <div className="text-sm font-medium text-zinc-700">{persona.numero_identificacion}</div>
+                  <div className="text-xs text-zinc-500">Tipo ID: {persona.tipo_identificacion_id}</div>
                 </td>
                 <td className="p-4">
                   <div className="text-sm text-zinc-600">
-                    Nacionalidad ID: {persona.nacionalidadId || 'N/A'}
+                    Nacionalidad ID: {persona.nacionalidad_id || 'N/A'}
                   </div>
                 </td>
                 <td className="p-4">
@@ -77,7 +77,7 @@ export const PersonaTable: React.FC<PersonaTableProps> = ({
                       <Edit2 size={18} />
                     </button>
                     <button
-                      onClick={() => persona.id && onDelete(persona.id)}
+                      onClick={() => persona.persona_id && onDelete(persona.persona_id)}
                       className="p-2 text-zinc-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all"
                     >
                       <Trash2 size={18} />

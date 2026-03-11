@@ -6,36 +6,36 @@ export class PersonaMapper implements BaseMapper<PersonaEntity, PersonaDTO> {
   
   toDTO(entity: PersonaEntity): PersonaDTO {
     return {
-      id: entity.persona_id,
-      tipoIdentificacionId: entity.tipo_identificacion_id,
-      numeroIdentificacion: entity.numero_identificacion,
-      nombresPersona: entity.nombres_persona,
-      primerApellido: entity.primer_apellido,
-      segundoApellido: entity.segundo_apellido,
-      fechaNacimiento: entity.fecha_nacimiento,
-      nacionalidadId: entity.nacionalidad_id,
-      generoId: entity.genero_id,
-      estadoCivilId: entity.estado_civil_id,
-      paisOrigenId: entity.pais_origen_id,
-      paisResidenciaId: entity.pais_residencia_id,
+      persona_id: entity.persona_id,
+      tipo_identificacion_id: entity.tipo_identificacion_id,
+      numero_identificacion: entity.numero_identificacion,
+      nombres_persona: entity.nombres_persona,
+      primer_apellido: entity.primer_apellido,
+      segundo_apellido: entity.segundo_apellido,
+      fecha_nacimiento: entity.fecha_nacimiento,
+      nacionalidad_id: entity.nacionalidad_id,
+      genero_id: entity.genero_id,
+      estado_civil_id: entity.estado_civil_id,
+      pais_origen_id: entity.pais_origen_id,
+      pais_residencia_id: entity.pais_residencia_id,
       active: entity.active,
     };
   }
 
   toEntity(dto: PersonaDTO): PersonaEntity {
     return {
-      persona_id: dto.id || 0,
-      tipo_identificacion_id: dto.tipoIdentificacionId,
-      numero_identificacion: dto.numeroIdentificacion,
-      nombres_persona: dto.nombresPersona,
-      primer_apellido: dto.primerApellido,
-      segundo_apellido: dto.segundoApellido || undefined,
-      fecha_nacimiento: dto.fechaNacimiento || undefined,
-      nacionalidad_id: dto.nacionalidadId || undefined,
-      genero_id: dto.generoId || undefined,
-      estado_civil_id: dto.estadoCivilId || undefined,
-      pais_origen_id: dto.paisOrigenId || undefined,
-      pais_residencia_id: dto.paisResidenciaId || undefined,
+      persona_id: dto.persona_id || 0,
+      tipo_identificacion_id: dto.tipo_identificacion_id,
+      numero_identificacion: dto.numero_identificacion || '', // Fallback safe
+      nombres_persona: dto.nombres_persona,
+      primer_apellido: dto.primer_apellido,
+      segundo_apellido: dto.segundo_apellido || undefined,
+      fecha_nacimiento: dto.fecha_nacimiento || undefined,
+      nacionalidad_id: dto.nacionalidad_id || undefined,
+      genero_id: dto.genero_id || undefined,
+      estado_civil_id: dto.estado_civil_id || undefined,
+      pais_origen_id: dto.pais_origen_id || undefined,
+      pais_residencia_id: dto.pais_residencia_id || undefined,
       active: dto.active ?? true,
     };
   }

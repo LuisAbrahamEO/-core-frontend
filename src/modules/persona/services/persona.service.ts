@@ -3,7 +3,8 @@ import { PersonaDTO, CatalogoDTO } from '../dto/persona.dto';
 
 /**
  * Servicio de API para el Módulo de Personas
- * Sincronizado con los controladores de NestJS.
+ * Sincronizado con los controladores de NestJS y el esquema Prisma.
+ * Implementa auditoría de nombres y tipos según ERD.
  */
 export const personaService = {
     // Métodos para Personas
@@ -52,18 +53,17 @@ export const personaService = {
         return data;
     },
 
-    // Nota: Si existen endpoints para países, se pueden agregar aquí.
-    // Asumiendo /pais para paisOrigenId y paisResidenciaId si aplica.
     async getPaises(): Promise<CatalogoDTO[]> {
-        try {
-            const { data } = await apiClient.get('/pais');
-            return data;
-        } catch (e) {
-            return []; // Fallback si no existe
-        }
+        const { data } = await apiClient.get('/pais');
+        return data;
     },
 
-    // Métodos para Contacto y Dirección
+    async getLocalidades(): Promise<CatalogoDTO[]> {
+        const { data } = await apiClient.get('/localidad');
+        return data;
+    },
+
+    // Métodos para Contacto y Dirección (Relaciones)
     async saveContacto(contacto: any): Promise<any> {
         const { data } = await apiClient.post('/contacto-persona', contacto);
         return data;
