@@ -40,6 +40,13 @@ export const personaSchema = z.object({
         .optional()
         .nullable(),
     active: z.boolean(),
+    
+    // Campos extendidos para Contacto y Dirección (se procesan en el submit)
+    email: z.string().email('Email inválido').max(255).optional().nullable(),
+    telefono: z.string().max(20, 'Máximo 20 caracteres').optional().nullable(),
+    calle: z.string().max(255).optional().nullable(),
+    numero: z.string().max(50).optional().nullable(),
+    localidadId: z.number().optional().nullable(),
 });
 
 export type PersonaDTO = z.infer<typeof personaSchema>;

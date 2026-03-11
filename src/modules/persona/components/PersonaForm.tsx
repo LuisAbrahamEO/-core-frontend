@@ -12,7 +12,10 @@ import {
     Heart, 
     Users, 
     MapPin,
-    AlertCircle
+    AlertCircle,
+    Mail,
+    Phone,
+    Loader2
 } from 'lucide-react';
 
 interface PersonaFormProps {
@@ -34,6 +37,7 @@ export const PersonaForm: React.FC<PersonaFormProps> = ({
     const [nacionalidades, setNacionalidades] = useState<CatalogoDTO[]>([]);
     const [estadosCiviles, setEstadosCiviles] = useState<CatalogoDTO[]>([]);
     const [paises, setPaises] = useState<CatalogoDTO[]>([]);
+    const [error, setError] = useState<string | null>(null);
 
     const {
         register,
@@ -74,11 +78,26 @@ export const PersonaForm: React.FC<PersonaFormProps> = ({
     }, []);
 
     return (
-        <form 
-            onSubmit={handleSubmit(onSubmit)} 
-            className="space-y-10 bg-[#F9FAFB] p-10 rounded-[2rem] shadow-lg border border-[#E5E7EB]"
-        >
-            {/* Header de Sección: Identidad */}
+        <div className="relative">
+            {isLoading && (
+                <div className="absolute inset-0 bg-white/60 backdrop-blur-[2px] z-50 flex flex-col items-center justify-center rounded-[2rem]">
+                    <Loader2 size={48} className="text-[#E31D4A] animate-spin mb-4" />
+                    <p className="text-[#1A1A1A] font-black uppercase tracking-widest text-xs">Procesando Información...</p>
+                </div>
+            )}
+
+            <form 
+                onSubmit={handleSubmit(onSubmit)} 
+                className="space-y-10 bg-[#F9FAFB] p-10 rounded-[2rem] shadow-lg border border-[#E5E7EB]"
+            >
+                {error && (
+                    <div className="bg-red-50 border-l-4 border-[#E31D4A] p-4 flex items-center gap-3">
+                        <AlertCircle className="text-[#E31D4A]" size={20} />
+                        <p className="text-sm font-bold text-[#E31D4A] uppercase tracking-tight">{error}</p>
+                    </div>
+                )}
+
+                {/* Header de Sección: Identidad */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="col-span-full flex items-center gap-3 text-[#111827] border-b-2 border-[#E31D4A] pb-4">
                     <User size={28} className="text-[#E31D4A]" />
@@ -194,21 +213,15 @@ export const PersonaForm: React.FC<PersonaFormProps> = ({
                     <label className="text-xs font-bold text-[#111827] uppercase tracking-widest flex items-center gap-2">
                         Género
                     </label>
-                    <div className="flex gap-4">
+                    <select
+                        {...register('generoId', { valueAsNumber: true })}
+                        className="w-full px-5 py-3 rounded-2xl border border-[#E5E7EB] bg-white focus:ring-2 focus:ring-[#E31D4A] outline-none transition-all font-medium text-sm shadow-sm"
+                    >
+                        <option value="">Seleccione género...</option>
                         {generos?.map(g => (
-                            <label key={g.id} className="flex items-center gap-2 cursor-pointer group">
-                                <input
-                                    type="radio"
-                                    value={g.id}
-                                    {...register('generoId', { valueAsNumber: true })}
-                                    className="w-4 h-4 text-[#E31D4A] focus:ring-[#E31D4A] border-[#E5E7EB]"
-                                />
-                                <span className="text-sm font-medium text-[#111827] group-hover:text-[#E31D4A] transition-colors">
-                                    {g.descripcion || g.codigo}
-                                </span>
-                            </label>
+                            <option key={g.id} value={g.id}>{g.descripcion || g.codigo}</option>
                         ))}
-                    </div>
+                    </select>
                 </div>
 
                 {/* Estado Civil */}
@@ -258,6 +271,73 @@ export const PersonaForm: React.FC<PersonaFormProps> = ({
                         ))}
                     </select>
                 </div>
+
+                {/* Header de Sección: Contacto */}
+                <div className="col-span-full flex items-center gap-3 text-[#111827] border-b-2 border-[#E31D4A] pb-4 pt-6">
+                    <Mail size={28} className="text-[#E31D4A]" />
+                    <h3 className="text-2xl font-bold tracking-tight">Información de Contacto</h3>
+                </div>
+
+                <div className="space-y-2">
+                    <label className="text-xs font-bold text-[#111827] uppercase tracking-widest flex items-center gap-2">
+                        Email Principal
+                    </label>
+                    <div className="relative">
+                        <Mail size={18} className="absolute left-5 top-1/2 -translate-y-1/2 text-[#E31D4A]" />
+                        <input
+                            {...register('email')}
+                            className="w-full pl-12 pr-5 py-3 rounded-2xl border border-[#E5E7EB] bg-white focus:ring-2 focus:ring-[#E31D4A] outline-none transition-all font-medium text-sm shadow-sm"
+                            placeholder="correo@ejemplo.com"
+                        />
+                    </div>
+                    {errors.email && (
+                        <p className="text-[10px] font-bold text-[#E31D4A] uppercase mt-1 flex items-center gap-1">
+                            <AlertCircle size={12} /> {errors.email.message}
+                        </p>
+                    )}
+                </div>
+
+                <div className="space-y-2">
+                    <label className="text-xs font-bold text-[#111827] uppercase tracking-widest flex items-center gap-2">
+                        Teléfono Móvil
+                    </label>
+                    <div className="relative">
+                        <Phone size={18} className="absolute left-5 top-1/2 -translate-y-1/2 text-[#5135A1]" />
+                        <input
+                            {...register('telefono')}
+                            className="w-full pl-12 pr-5 py-3 rounded-2xl border border-[#E5E7EB] bg-white focus:ring-2 focus:ring-[#E31D4A] outline-none transition-all font-medium text-sm shadow-sm"
+                            placeholder="+56 9 1234 5678"
+                        />
+                    </div>
+                </div>
+
+                {/* Header de Sección: Dirección */}
+                <div className="col-span-full flex items-center gap-3 text-[#111827] border-b-2 border-[#5135A1] pb-4 pt-6">
+                    <MapPin size={28} className="text-[#5135A1]" />
+                    <h3 className="text-2xl font-bold tracking-tight">Dirección de Residencia</h3>
+                </div>
+
+                <div className="space-y-2">
+                    <label className="text-xs font-bold text-[#111827] uppercase tracking-widest flex items-center gap-2">
+                        Calle / Avenida
+                    </label>
+                    <input
+                        {...register('calle')}
+                        className="w-full px-5 py-3 rounded-2xl border border-[#E5E7EB] bg-white focus:ring-2 focus:ring-[#E31D4A] outline-none transition-all font-medium text-sm shadow-sm"
+                        placeholder="Ej: Av. Providencia"
+                    />
+                </div>
+
+                <div className="space-y-2">
+                    <label className="text-xs font-bold text-[#111827] uppercase tracking-widest flex items-center gap-2">
+                        Número / Depto
+                    </label>
+                    <input
+                        {...register('numero')}
+                        className="w-full px-5 py-3 rounded-2xl border border-[#E5E7EB] bg-white focus:ring-2 focus:ring-[#E31D4A] outline-none transition-all font-medium text-sm shadow-sm"
+                        placeholder="Ej: 1234, Of 501"
+                    />
+                </div>
             </div>
 
             {/* Acciones del Formulario */}
@@ -279,5 +359,6 @@ export const PersonaForm: React.FC<PersonaFormProps> = ({
                 </button>
             </div>
         </form>
+    </div>
     );
 };

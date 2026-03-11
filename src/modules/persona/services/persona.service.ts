@@ -61,5 +61,16 @@ export const personaService = {
         } catch (e) {
             return []; // Fallback si no existe
         }
+    },
+
+    // Métodos para Contacto y Dirección
+    async saveContacto(contacto: any): Promise<any> {
+        const { data } = await apiClient.post('/contacto-persona', contacto);
+        return data;
+    },
+
+    async saveDireccion(direccion: any): Promise<any> {
+        const { data } = await apiClient.post('/direccion-persona', direccion);
+        return data;
     }
 };

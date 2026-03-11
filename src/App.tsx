@@ -15,6 +15,7 @@ import { EmpresaDTO } from './modules/empresa/dto/empresa.dto';
 import { PersonaTable } from './modules/persona/components/PersonaTable';
 import { PersonaForm } from './modules/persona/components/PersonaForm';
 import { PersonaDTO } from './modules/persona/dto/persona.dto';
+import { personaService } from './modules/persona/services/persona.service';
 
 import { ProfesionalTable } from './modules/profesional/components/ProfesionalTable';
 import { ProfesionalForm } from './modules/profesional/components/ProfesionalForm';
@@ -184,6 +185,7 @@ type TabType = 'empresas' | 'personas' | 'profesionales';
 export default function App() {
   const [activeTab, setActiveTab] = useState<TabType>('personas');
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   
   // Estados para edición
   const [selectedEmpresa, setSelectedEmpresa] = useState<EmpresaDTO | null>(null);
@@ -204,10 +206,49 @@ export default function App() {
     setSelectedProfesional(null);
   };
 
-  const handleFormSubmit = (data: any) => {
-    console.log(`Simulando envío al Backend (${activeTab}):`, JSON.stringify(data, null, 2));
-    alert(`¡Registro guardado con éxito!\n\nEl sistema ha procesado la información correctamente.`);
-    handleCloseForm();
+  const handleFormSubmit = async (data: any) => {
+    setIsLoading(true);
+    try {
+      if (activeTab === 'personas') {
+        // 1. Crear Persona
+        const persona = await personaService.create(data);
+        const personaId = persona.id!;
+
+        // 2. Guardar Contacto si existe
+        if (data.email || data.telefono) {
+          await personaService.saveContacto({
+            persona_id: personaId,
+            tipo_contacto_id: 1, // Asumiendo 1 para Email/Teléfono general
+            ambito_contacto_id: 1,
+            valor_contacto: data.email || data.telefono,
+            principal: true,
+            activo: true
+          });
+        }
+
+        // 3. Guardar Dirección si existe
+        if (data.calle || data.numero) {
+          await personaService.saveDireccion({
+            persona_id: personaId,
+            tipo_direccion_id: 1,
+            calle: data.calle,
+            numero: data.numero,
+            localidad_id: data.localidadId || 1
+          });
+        }
+      } else {
+        console.log(`Simulando envío al Backend (${activeTab}):`, JSON.stringify(data, null, 2));
+      }
+      
+      alert(`¡Registro guardado con éxito!\n\nEl sistema ha procesado la información correctamente.`);
+      handleCloseForm();
+    } catch (error: any) {
+      console.error('Error al guardar:', error);
+      const errorMsg = error.response?.data?.message || 'Error inesperado al procesar la solicitud.';
+      alert(`Error: ${errorMsg}`);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleDelete = (id: number) => {
@@ -381,6 +422,7 @@ export default function App() {
                     initialData={selectedEmpresa || {}} 
                     onSubmit={handleFormSubmit} 
                     onCancel={handleCloseForm}
+                    isLoading={isLoading}
                   />
                 )}
                 {activeTab === 'personas' && (
@@ -388,6 +430,7 @@ export default function App() {
                     initialData={selectedPersona || {}} 
                     onSubmit={handleFormSubmit} 
                     onCancel={handleCloseForm}
+                    isLoading={isLoading}
                   />
                 )}
                 {activeTab === 'profesionales' && (
@@ -397,6 +440,7 @@ export default function App() {
                     onCancel={handleCloseForm}
                     personas={MOCK_PERSONAS}
                     empresas={MOCK_EMPRESAS}
+                    isLoading={isLoading}
                   />
                 )}
               </div>
