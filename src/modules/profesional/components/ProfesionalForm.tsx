@@ -53,7 +53,7 @@ export const ProfesionalForm: React.FC<ProfesionalFormProps> = ({
           >
             <option value="">-- Seleccione una Persona --</option>
             {personas.map(p => (
-              <option key={p.id} value={p.id}>{p.nombres} {p.apellidos} ({p.numeroIdentificacion})</option>
+              <option key={p.id} value={p.id}>{p.nombresPersona} {p.primerApellido} ({p.numeroIdentificacion})</option>
             ))}
           </select>
           {errors.personaId && <p className="text-[10px] font-bold text-[#E31D4A] uppercase mt-1">{errors.personaId.message}</p>}

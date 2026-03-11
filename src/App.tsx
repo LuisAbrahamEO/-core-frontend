@@ -182,7 +182,7 @@ const MOCK_PROFESIONALES: ProfesionalDTO[] = [
 type TabType = 'empresas' | 'personas' | 'profesionales';
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState<TabType>('empresas');
+  const [activeTab, setActiveTab] = useState<TabType>('personas');
   const [isFormOpen, setIsFormOpen] = useState(false);
   
   // Estados para edición

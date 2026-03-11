@@ -52,18 +52,20 @@ export const PersonaForm: React.FC<PersonaFormProps> = ({
     useEffect(() => {
         const loadCatalogs = async () => {
             try {
-                const [tipos, gens, nacs, civils, ps] = await Promise.all([
+                const [tipos, gens, nacs, civils, ps] = await Promise.allSettled([
                     personaService.getTiposIdentificacion(),
                     personaService.getGeneros(),
                     personaService.getNacionalidades(),
                     personaService.getEstadosCiviles(),
                     personaService.getPaises()
                 ]);
-                setTiposIdentificacion(tipos);
-                setGeneros(gens);
-                setNacionalidades(nacs);
-                setEstadosCiviles(civils);
-                setPaises(ps);
+
+                if (tipos.status === 'fulfilled' && Array.isArray(tipos.value)) setTiposIdentificacion(tipos.value);
+                if (gens.status === 'fulfilled' && Array.isArray(gens.value)) setGeneros(gens.value);
+                if (nacs.status === 'fulfilled' && Array.isArray(nacs.value)) setNacionalidades(nacs.value);
+                if (civils.status === 'fulfilled' && Array.isArray(civils.value)) setEstadosCiviles(civils.value);
+                if (ps.status === 'fulfilled' && Array.isArray(ps.value)) setPaises(ps.value);
+                
             } catch (error) {
                 console.error('Error cargando catálogos:', error);
             }
@@ -93,7 +95,7 @@ export const PersonaForm: React.FC<PersonaFormProps> = ({
                         className="w-full px-5 py-3 rounded-2xl border border-[#E5E7EB] bg-white focus:ring-2 focus:ring-[#E31D4A] outline-none transition-all font-medium text-sm shadow-sm"
                     >
                         <option value="">Seleccione tipo...</option>
-                        {tiposIdentificacion.map(t => (
+                        {tiposIdentificacion?.map(t => (
                             <option key={t.id} value={t.id}>{t.descripcion || t.codigo}</option>
                         ))}
                     </select>
@@ -193,7 +195,7 @@ export const PersonaForm: React.FC<PersonaFormProps> = ({
                         Género
                     </label>
                     <div className="flex gap-4">
-                        {generos.map(g => (
+                        {generos?.map(g => (
                             <label key={g.id} className="flex items-center gap-2 cursor-pointer group">
                                 <input
                                     type="radio"
@@ -219,7 +221,7 @@ export const PersonaForm: React.FC<PersonaFormProps> = ({
                         className="w-full px-5 py-3 rounded-2xl border border-[#E5E7EB] bg-white focus:ring-2 focus:ring-[#E31D4A] outline-none transition-all font-medium text-sm shadow-sm"
                     >
                         <option value="">Seleccione estado...</option>
-                        {estadosCiviles.map(ec => (
+                        {estadosCiviles?.map(ec => (
                             <option key={ec.id} value={ec.id}>{ec.descripcion}</option>
                         ))}
                     </select>
@@ -235,7 +237,7 @@ export const PersonaForm: React.FC<PersonaFormProps> = ({
                         className="w-full px-5 py-3 rounded-2xl border border-[#E5E7EB] bg-white focus:ring-2 focus:ring-[#E31D4A] outline-none transition-all font-medium text-sm shadow-sm"
                     >
                         <option value="">Seleccione nacionalidad...</option>
-                        {nacionalidades.map(n => (
+                        {nacionalidades?.map(n => (
                             <option key={n.id} value={n.id}>{n.nombre}</option>
                         ))}
                     </select>
@@ -251,7 +253,7 @@ export const PersonaForm: React.FC<PersonaFormProps> = ({
                         className="w-full px-5 py-3 rounded-2xl border border-[#E5E7EB] bg-white focus:ring-2 focus:ring-[#E31D4A] outline-none transition-all font-medium text-sm shadow-sm"
                     >
                         <option value="">Seleccione país...</option>
-                        {paises.map(p => (
+                        {paises?.map(p => (
                             <option key={p.id} value={p.id}>{p.nombre}</option>
                         ))}
                     </select>
