@@ -82,53 +82,40 @@ const MOCK_PERSONAS: PersonaDTO[] = [
     id: 1,
     tipoIdentificacionId: 1,
     numeroIdentificacion: "18.456.789-0",
-    nombres: "Juan Pablo",
-    apellidos: "Soto Mayor",
+    nombresPersona: "Juan Pablo",
+    primerApellido: "Soto",
+    segundoApellido: "Mayor",
     fechaNacimiento: "1990-05-15",
     nacionalidadId: 1,
     generoId: 1,
     estadoCivilId: 2,
-    activo: true,
-    contactos: [
-      { id: 1, tipoContactoId: 1, ambitoContactoId: 1, valor: "juan.soto@email.com", esPrincipal: true, activo: true }
-    ],
-    direcciones: [
-      { id: 1, tipoDireccionId: 1, calle: "Los Alerces", numero: "450", localidadId: 1 }
-    ]
+    active: true,
   },
   {
     id: 2,
     tipoIdentificacionId: 1,
     numeroIdentificacion: "15.222.333-4",
-    nombres: "María Ignacia",
-    apellidos: "López Jara",
+    nombresPersona: "María Ignacia",
+    primerApellido: "López",
+    segundoApellido: "Jara",
     fechaNacimiento: "1985-11-20",
     nacionalidadId: 1,
     generoId: 2,
     estadoCivilId: 1,
-    activo: true,
-    contactos: [
-      { id: 2, tipoContactoId: 2, ambitoContactoId: 1, valor: "+56988776655", esPrincipal: true, activo: true }
-    ],
-    direcciones: [
-      { id: 2, tipoDireccionId: 1, calle: "Av. Las Condes", numero: "10200", localidadId: 2 }
-    ]
+    active: true,
   },
   {
     id: 3,
     tipoIdentificacionId: 1,
     numeroIdentificacion: "20.111.222-3",
-    nombres: "Carlos Andrés",
-    apellidos: "Vicuña Mackenna",
+    nombresPersona: "Carlos Andrés",
+    primerApellido: "Vicuña",
+    segundoApellido: "Mackenna",
     fechaNacimiento: "1995-02-10",
     nacionalidadId: 1,
     generoId: 1,
     estadoCivilId: 1,
-    activo: false,
-    contactos: [
-      { id: 3, tipoContactoId: 1, ambitoContactoId: 1, valor: "carlos.v@email.com", esPrincipal: true, activo: true }
-    ],
-    direcciones: []
+    active: false,
   }
 ];
 

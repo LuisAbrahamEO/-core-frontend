@@ -36,8 +36,7 @@ export const PersonaTable: React.FC<PersonaTableProps> = ({
           </tr>
         </thead>
         <tbody className="divide-y divide-zinc-100">
-          {personas.map((persona) => {
-            const principalContact = persona.contactos.find(c => c.esPrincipal) || persona.contactos[0];
+              {personas.map((persona) => {
             return (
               <tr key={persona.id} className="hover:bg-zinc-50/50 transition-colors group">
                 <td className="p-4">
@@ -46,9 +45,9 @@ export const PersonaTable: React.FC<PersonaTableProps> = ({
                       <User size={20} />
                     </div>
                     <div>
-                      <div className="font-medium text-zinc-900">{persona.nombres} {persona.apellidos}</div>
+                      <div className="font-medium text-zinc-900">{persona.nombresPersona} {persona.primerApellido}</div>
                       <div className="text-xs text-zinc-500 flex items-center gap-1">
-                        <Calendar size={12} /> {persona.fechaNacimiento}
+                        <Calendar size={12} /> {persona.fechaNacimiento || 'N/A'}
                       </div>
                     </div>
                   </div>
@@ -58,23 +57,15 @@ export const PersonaTable: React.FC<PersonaTableProps> = ({
                   <div className="text-xs text-zinc-500">Tipo ID: {persona.tipoIdentificacionId}</div>
                 </td>
                 <td className="p-4">
-                  {principalContact ? (
-                    <div className="text-sm text-zinc-600 flex items-center gap-2">
-                      {principalContact.tipoContactoId === 1 ? <Mail size={14} /> : <Phone size={14} />}
-                      {principalContact.valor}
-                    </div>
-                  ) : (
-                    <span className="text-xs text-zinc-400 italic">Sin contacto</span>
-                  )}
-                  <div className="text-xs text-zinc-400 flex items-center gap-1 mt-1">
-                    <MapPin size={12} /> {persona.direcciones.length} direcciones
+                  <div className="text-sm text-zinc-600">
+                    Nacionalidad ID: {persona.nacionalidadId || 'N/A'}
                   </div>
                 </td>
                 <td className="p-4">
                   <span className={`px-2 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${
-                    persona.activo ? 'bg-emerald-50 text-emerald-600' : 'bg-zinc-100 text-zinc-500'
+                    persona.active ? 'bg-emerald-50 text-emerald-600' : 'bg-zinc-100 text-zinc-500'
                   }`}>
-                    {persona.activo ? 'Activo' : 'Inactivo'}
+                    {persona.active ? 'Activo' : 'Inactivo'}
                   </span>
                 </td>
                 <td className="p-4 text-right">

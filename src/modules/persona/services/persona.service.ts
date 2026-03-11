@@ -1,45 +1,65 @@
 import apiClient from '@/src/common/api.client';
-import { ApiResponse, PaginatedResponse } from '@/src/common/base.types';
-import { PersonaEntity } from '../types/persona.types';
-import { PersonaDTO } from '../dto/persona.dto';
-import { personaMapper } from '../mapper/persona.mapper';
+import { PersonaDTO, CatalogoDTO } from '../dto/persona.dto';
 
+/**
+ * Servicio de API para el Módulo de Personas
+ * Sincronizado con los controladores de NestJS.
+ */
 export const personaService = {
-  async getAll(params?: any): Promise<PaginatedResponse<PersonaDTO>> {
-    const { data } = await apiClient.get<PaginatedResponse<PersonaEntity>>('/personas', { params });
-    return {
-      ...data,
-      data: data.data.map(p => personaMapper.toDTO(p)),
-    };
-  },
+    // Métodos para Personas
+    async getAll(params?: any): Promise<any> {
+        const { data } = await apiClient.get('/persona', { params });
+        return data;
+    },
 
-  async getById(id: number): Promise<ApiResponse<PersonaDTO>> {
-    const { data } = await apiClient.get<ApiResponse<PersonaEntity>>(`/personas/${id}`);
-    return {
-      ...data,
-      data: personaMapper.toDTO(data.data),
-    };
-  },
+    async getById(id: number): Promise<PersonaDTO> {
+        const { data } = await apiClient.get(`/persona/${id}`);
+        return data;
+    },
 
-  async create(persona: PersonaDTO): Promise<ApiResponse<PersonaDTO>> {
-    const entity = personaMapper.toEntity(persona);
-    const { data } = await apiClient.post<ApiResponse<PersonaEntity>>('/personas', entity);
-    return {
-      ...data,
-      data: personaMapper.toDTO(data.data),
-    };
-  },
+    async create(persona: PersonaDTO): Promise<PersonaDTO> {
+        const { data } = await apiClient.post('/persona', persona);
+        return data;
+    },
 
-  async update(id: number, persona: PersonaDTO): Promise<ApiResponse<PersonaDTO>> {
-    const entity = personaMapper.toEntity(persona);
-    const { data } = await apiClient.put<ApiResponse<PersonaEntity>>(`/personas/${id}`, entity);
-    return {
-      ...data,
-      data: personaMapper.toDTO(data.data),
-    };
-  },
+    async update(id: number, persona: PersonaDTO): Promise<PersonaDTO> {
+        const { data } = await apiClient.put(`/persona/${id}`, persona);
+        return data;
+    },
 
-  async delete(id: number): Promise<void> {
-    await apiClient.delete(`/personas/${id}`);
-  },
+    async delete(id: number): Promise<void> {
+        await apiClient.delete(`/persona/${id}`);
+    },
+
+    // Métodos para Catálogos (Selectores Dinámicos)
+    async getGeneros(): Promise<CatalogoDTO[]> {
+        const { data } = await apiClient.get('/genero');
+        return data;
+    },
+
+    async getNacionalidades(): Promise<CatalogoDTO[]> {
+        const { data } = await apiClient.get('/nacionalidad');
+        return data;
+    },
+
+    async getEstadosCiviles(): Promise<CatalogoDTO[]> {
+        const { data } = await apiClient.get('/estado-civil');
+        return data;
+    },
+
+    async getTiposIdentificacion(): Promise<CatalogoDTO[]> {
+        const { data } = await apiClient.get('/tipo-identificacion');
+        return data;
+    },
+
+    // Nota: Si existen endpoints para países, se pueden agregar aquí.
+    // Asumiendo /pais para paisOrigenId y paisResidenciaId si aplica.
+    async getPaises(): Promise<CatalogoDTO[]> {
+        try {
+            const { data } = await apiClient.get('/pais');
+            return data;
+        } catch (e) {
+            return []; // Fallback si no existe
+        }
+    }
 };

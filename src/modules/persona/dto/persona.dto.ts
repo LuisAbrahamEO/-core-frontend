@@ -1,44 +1,53 @@
 import { z } from 'zod';
-import { commonSchemas } from '@/src/common/validation.utils';
 
 /**
- * Esquemas de validación y DTOs para el Frontend (camelCase)
+ * Esquemas de validación y DTOs sincronizados con el Backend (NestJS/Prisma)
+ * Siguiendo estrictamente los nombres de campos del SQL y DTOs del servidor.
  */
 
-export const contactoSchema = z.object({
-  id: z.number().optional(),
-  tipoContactoId: z.number(),
-  ambitoContactoId: z.number(),
-  valor: z.string().min(1, 'El valor de contacto es requerido'),
-  esPrincipal: z.boolean(),
-  activo: z.boolean(),
-});
-
-export const direccionSchema = z.object({
-  id: z.number().optional(),
-  tipoDireccionId: z.number(),
-  calle: z.string().min(1, 'La calle es requerida'),
-  numero: z.string().min(1, 'El número es requerido'),
-  bloque: z.string().optional(),
-  apartamento: z.string().optional(),
-  localidadId: z.number(),
-});
-
 export const personaSchema = z.object({
-  id: z.number().optional(),
-  tipoIdentificacionId: z.number(),
-  numeroIdentificacion: z.string().min(1, 'Número de identificación requerido'),
-  nombres: z.string().min(1, 'Nombres requeridos'),
-  apellidos: z.string().min(1, 'Apellidos requeridos'),
-  fechaNacimiento: commonSchemas.date,
-  nacionalidadId: z.number(),
-  generoId: z.number(),
-  estadoCivilId: z.number(),
-  activo: z.boolean(),
-  contactos: z.array(contactoSchema),
-  direcciones: z.array(direccionSchema),
+    id: z.number().optional(),
+    tipoIdentificacionId: z.number(),
+    numeroIdentificacion: z.string()
+        .min(1, 'Número de identificación es requerido')
+        .max(50, 'Máximo 50 caracteres'),
+    nombresPersona: z.string()
+        .min(1, 'Nombres son requeridos')
+        .max(255, 'Máximo 255 caracteres'),
+    primerApellido: z.string()
+        .min(1, 'Primer apellido es requerido')
+        .max(255, 'Máximo 255 caracteres'),
+    segundoApellido: z.string()
+        .max(255, 'Máximo 255 caracteres')
+        .optional()
+        .nullable(),
+    fechaNacimiento: z.string()
+        .optional()
+        .nullable(),
+    nacionalidadId: z.number()
+        .optional()
+        .nullable(),
+    generoId: z.number()
+        .optional()
+        .nullable(),
+    estadoCivilId: z.number()
+        .optional()
+        .nullable(),
+    paisOrigenId: z.number()
+        .optional()
+        .nullable(),
+    paisResidenciaId: z.number()
+        .optional()
+        .nullable(),
+    active: z.boolean(),
 });
 
-export type ContactoDTO = z.infer<typeof contactoSchema>;
-export type DireccionDTO = z.infer<typeof direccionSchema>;
 export type PersonaDTO = z.infer<typeof personaSchema>;
+
+// DTOs para catálogos
+export interface CatalogoDTO {
+    id: number;
+    descripcion?: string;
+    nombre?: string;
+    codigo?: string;
+}
